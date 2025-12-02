@@ -14,6 +14,6 @@ public class GameResponseDTO {
     private List<Character> letrasIntentadas;
     private Integer intentosRestantes;
     private Boolean palabraCompleta;
-    private Integer puntajeAcumulado;
+    private Integer puntajeAcumulado = 0;
 }
 

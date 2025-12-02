@@ -30,8 +30,11 @@ public class GameController {
     @Operation(summary = "Realizar un intento de adivinar letra")
     public ResponseEntity<GameResponseDTO> makeGuess(@RequestBody Map<String, Object> request) {
         Long playerId = Long.valueOf(request.get("idJugador").toString());
+        System.out.println("playerId desde el controller: " + playerId);
         Character letra = request.get("letra").toString().charAt(0);
-        
+        System.out.println("letra desde el controller: " + letra);
+
+
         GameResponseDTO result = gameService.makeGuess(playerId, letra);
         return ResponseEntity.ok(result);
     }

@@ -1,1 +1,21 @@
 # TODO: Implementar el docker-compose.yml
+version: '3.9'
+
+services:
+  ahorcado-db:
+    image: postgres:16
+    container_name: ahorcado-db
+    environment:
+      POSTGRES_DB: demobase
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+  ahorcado-service:
+    container_name: ahorcado-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"

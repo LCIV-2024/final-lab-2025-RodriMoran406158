@@ -42,13 +42,22 @@ public class GameService {
         // Verificar si ya existe una partida en curso para este jugador y palabra
 //        GameInProgress gameInProgress = gameInProgressRepository.findByJugadorIdOrderByFechaInicioDesc(playerId)
 //                .get(0);
-        List<GameInProgress> gameInProgressList = gameInProgressRepository.findByJugadorIdOrderByFechaInicioDesc(playerId);
 
-        Word word = wordRepository.findAll()
-                .stream()
-                .filter(w -> !w.getUtilizada())
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("No hay palabras disponibles!"));
+
+        Optional<Word> wordOptional = wordRepository.findRandomWord();
+
+        if (wordOptional.isEmpty()) {
+            throw new RuntimeException("No hay palabras disponibles");
+        }
+        Word word = wordOptional.get();
+
+        Optional<GameInProgress> partidas = gameInProgressRepository
+                .findByJugadorAndPalabra(playerId, word.getId());
+
+        if (!partidas.isEmpty()) {
+            GameInProgress partidaExistente = partidas.get();
+            return buildResponseFromGameInProgress(partidaExistente);
+        }
 
         // Marcar la palabra como utilizada
         word.setUtilizada(true);
@@ -127,13 +136,10 @@ public class GameService {
         }
 
         // Guardar el estado actualizado
-        
-
 
         gameInProgressRepository.save(gp);
         // Construir respuesta
         return buildResponseFromGameInProgress(gp);
-
     }
     
     private GameResponseDTO buildResponseFromGameInProgress(GameInProgress gameInProgress) {

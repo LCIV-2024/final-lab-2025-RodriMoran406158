@@ -15,8 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -110,7 +112,21 @@ class ScoreboardServiceTest {
     @Test
     void testGetScoreboardByPlayer_Success() {
         // TODO: Implementar el test para testGetScoreboardByPlayer_Success
-        
+        //given
+        List<Game> games = new ArrayList<>();
+        games.add(game1);
+        games.add(game2);
+        games.add(game3);
+        //when
+        when(playerRepository.findById(1L)).thenReturn(Optional.of(player1));
+        when(gameRepository.findByJugador(player1)).thenReturn(games);
+        //then
+        //45
+
+        ScoreboardDTO result = scoreboardService.getScoreboardByPlayer(1L);
+        assertEquals(45, result.getPuntajeTotal());
+        assertEquals(2, result.getPartidasGanadas());
+        assertEquals(1, result.getPartidasPerdidas());
     }
 
     @Test
